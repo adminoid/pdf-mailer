@@ -4,9 +4,9 @@
   <div class="float-right to">
     <p>143500, г. Истра, ул. Советская, д. 7а</p>
 
-    <contenteditable tag="p" contenteditable v-model="whomPosition" :noNL="true" :noHTML="true" @returned="enterPressed" class="field"/>
+    <contenteditable tag="p" contenteditable v-model="fields.whomPosition" :noNL="true" :noHTML="true" @returned="enterPressed" class="field"/>
 
-    <contenteditable tag="p" contenteditable v-model="whomName" :noNL="true" :noHTML="true" @returned="enterPressed" class="field"/>
+    <contenteditable tag="p" contenteditable v-model="fields.whomName" :noNL="true" :noHTML="true" @returned="enterPressed" class="field"/>
 
   </div>
 </div>
@@ -14,7 +14,16 @@
 <main>
   <div class="centered">
 
-    <contenteditable tag="h3" contenteditable v-model="header" :noNL="true" :noHTML="true" @returned="enterPressed" class="field"/>
+    <contenteditable tag="h3" contenteditable v-model="fields.header" :noNL="true" :noHTML="true" @returned="enterPressed" class="field"/>
+
+    <div class="form">
+      <label for="email">На какой email отправлять?</label>
+      <br>
+      <br>
+      <input type="text" id="email" ref="email" v-model="fields.email">
+    </div>
+
+    <br>
 
   </div>
   <p>Ваше предприятие - одно из крупнейших в нашем регионе, и Вы, как его руководитель, входите в деловую элиту города Истра. Ваше предприятие также значится в списке социально ответственных компаний.</p>
@@ -29,6 +38,7 @@
 
 <script>
 import contenteditable from 'vue-contenteditable'
+import axios from 'axios'
 
 export default {
   name: 'App',
@@ -39,27 +49,48 @@ export default {
 
   data () {
     return {
-      isEditable: true,
-      whomPosition: 'Директору «Арена-Истра»',
-      whomName: 'Адамову Николаю Адамовичу',
-      header: 'Уважаемый Николай Адамович',
+      fields: {
+        whomPosition: 'Директору «Арена-Истра»',
+        whomName: 'Адамову Николаю Адамовичу',
+        header: 'Уважаемый Николай Адамович',
+        email: 'info@romb.ru'
+      }
     }
   },
 
   methods : {
-    enterPressed(){
-      console.log('Enter Pressed');
+    enterPressed () {
+      axios.post('/save-data', this.fields)
+          .then((response) => {
+            console.log(response)
+          })
+    },
+
+    focusInput() {
+      this.$refs.email.focus()
     }
+  },
+
+  mounted() {
+    this.focusInput()
   }
 }
 </script>
 
 <style lang="sass">
 
-.field[contenteditable]
+.field[contenteditable],
+.form
   background-color: #f6ec8c
   border: 2px dashed #f1a665
   border-radius: 5px
+
+.form
+  background-color: #bbe3ff
+  padding: 5px 0
+  input
+    height: 30px
+    font-size: 14px
 
 .to
   width: 19em
