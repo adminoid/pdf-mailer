@@ -4,9 +4,9 @@
   <div class="float-right to">
     <p>143500, г. Истра, ул. Советская, д. 7а</p>
 
-    <contenteditable tag="p" contenteditable v-model="WhomPosition" :noNL="true" :noHTML="true" @returned="enterPressed" class="field"/>
+    <contenteditable tag="p" contenteditable v-model="whomPosition" :noNL="true" :noHTML="true" @returned="enterPressed" class="field"/>
 
-    <contenteditable tag="p" contenteditable v-model="WhomName" :noNL="true" :noHTML="true" @returned="enterPressed" class="field"/>
+    <contenteditable tag="p" contenteditable v-model="whomName" :noNL="true" :noHTML="true" @returned="enterPressed" class="field"/>
 
   </div>
 </div>
@@ -40,8 +40,8 @@ export default {
   data () {
     return {
       isEditable: true,
-      WhomPosition: 'Директору «Арена-Истра»',
-      WhomName: 'Адамову Николаю Адамовичу',
+      whomPosition: 'Директору «Арена-Истра»',
+      whomName: 'Адамову Николаю Адамовичу',
       header: 'Уважаемый Николай Адамович',
     }
   },
