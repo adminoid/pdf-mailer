@@ -1,17 +1,38 @@
 <!DOCTYPE html>
-<html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="/css/app.min.css">
+</head>
+
+<body>
+<div>
+    <img src="/img/header.svg" alt="Logotype" class="logo">
+    <div class="mini-margin centered float-right w21em">
+        <div class="bold">
+            <p>АНО СПН «ЗДОРОВЫЙ ВЫБОР»</p>
+            <p>Раменское</p>
+        </div>
+        <p>ИНН 5040146083, ОГРН 1175000000086</p>
+        <p>Раменское, д. Клешова, ул. Красная, д. 69</p>
+        <p>тел. 8 (915) 115-56-86</p>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="underlined">
+    исх №0507/02 от 16.07.2018
+</div>
+
+<div id="app"></div>
+
+<div class="sign">
+    <div class="float-left">
+        <div class="bottom">Руководитель АНО СПН «ЗДОРОВЫЙ ВЫБОР»</div>
+    </div>
+    <img src="/img/stamp.jpg" alt="stamp" class="stamp float-right">
+</div>
+
+</body>
 </html>
