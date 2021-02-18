@@ -9,6 +9,34 @@ app.get('/',function(req,res){
     res.sendFile(path.join(__dirname,"../dist/index.html"));
 });
 
+app.get('/html', (req, res) => {
+
+    const sqlite3 = require('sqlite3').verbose();
+    const dbPath = path.join(__dirname, "../backend/sqlite/database.dat");
+    const db = new sqlite3.Database(dbPath);
+
+    app.set('views', path.join(__dirname, '/views'));
+    app.set('view engine', 'pug');
+
+    db.all("SELECT * FROM peoples ORDER BY timestamp DESC LIMIT 1;", function (err, row) {
+
+        if (err) {
+            console.error(err.message);
+        }
+
+        console.log(row);
+
+        res.render("index", {
+            title: row[0].whom_position,
+            message: row[0].header,
+        });
+
+    });
+
+    db.close();
+
+});
+
 app.post('/save-data', function (request, response) {
 
     let body = '';
@@ -19,11 +47,8 @@ app.post('/save-data', function (request, response) {
     request.on('end', function() {
         let parsed = JSON.parse(body);
 
-        // console.log(parsed);
-
         const sqlite3 = require('sqlite3').verbose();
         const dbPath = path.join(__dirname, "../backend/sqlite/database.dat");
-        // console.log(dbPath);
         const db = new sqlite3.Database(dbPath);
 
         db.serialize(function () {
@@ -88,8 +113,6 @@ app.post('/save-data', function (request, response) {
 //
         response.end('post received')
     })
-
-
 
 });
 
