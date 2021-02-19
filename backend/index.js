@@ -5,7 +5,7 @@ const port = 3000;
 
 app.use(express.static(path.join(__dirname, "../dist")));
 
-app.get('/',function(req,res){
+app.get('/', (req,res) => {
     res.sendFile(path.join(__dirname,"../dist/index.html"));
 });
 
@@ -61,6 +61,32 @@ app.post('/save-data', function (request, response) {
             })
         });
         db.close();
+
+        console.log(path.join(__dirname, 'files/offer.pdf'))
+
+        const { exec } = require('child_process');
+
+        const command = 'wkhtmltopdf http://localhost:3000/html ' + path.join(__dirname, 'files/offer.pdf')
+        console.log(command)
+
+        exec(command, (err, stdout, stderr) => {
+            if (err) {
+                console.error(err.message)
+            }
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+        });
+
+        // const child = exec('wkhtmltopdf http://localhost:3000/' + path.join(__dirname, 'files/offer.pdf'),
+        //     (error, stdout, stderr) => {
+        //         console.log(`stdout: ${stdout}`);
+        //         console.log(`stderr: ${stderr}`);
+        //         if (error !== null) {
+        //             console.log(`exec error: ${error}`);
+        //         }
+        //     });
+        //
+        // console.log(child)
 
 //
 //         const nodemailer = require('nodemailer');
