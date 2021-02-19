@@ -24,11 +24,10 @@ app.get('/html', (req, res) => {
             console.error(err.message);
         }
 
-        console.log(row);
-
         res.render("index", {
-            title: row[0].whom_position,
-            message: row[0].header,
+            whom_name: row[0].whom_name,
+            whom_position: row[0].whom_position,
+            header: row[0].header,
         });
 
     });
