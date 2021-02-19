@@ -22,6 +22,7 @@ app.get('/html', (req, res) => {
 
         if (err) {
             console.error(err.message);
+            res.end(err.message)
         }
 
         res.render("index", {
@@ -50,6 +51,8 @@ app.post('/save-data', function (request, response) {
         const dbPath = path.join(__dirname, "../backend/sqlite/database.dat");
         const db = new sqlite3.Database(dbPath);
 
+        console.log(parsed.email)
+
         db.serialize(function () {
             let timestamp = +new Date();
             db.run('INSERT INTO peoples(whom_name, whom_position, header, email, timestamp' +
@@ -62,88 +65,55 @@ app.post('/save-data', function (request, response) {
         });
         db.close();
 
-        console.log(path.join(__dirname, 'files/offer.pdf'))
-
-        const { exec } = require('child_process');
-
         const command = 'wkhtmltopdf http://localhost:3000/html ' + path.join(__dirname, 'files/offer.pdf')
-        console.log(command)
-
-        exec(command, (err, stdout, stderr) => {
+        const { exec } = require('child_process');
+        exec(command, (err) => {
             if (err) {
                 console.error(err.message)
             }
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
+
+            const nodemailer = require('nodemailer');
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true, // use SSL
+                auth: {
+                    user: process.env.MAIL,
+                    pass: process.env.WPD
+                }
+            });
+
+            transporter.sendMail({
+                from: process.env.MAIL,
+                // to: process.env.MAIL_TO,
+                to: parsed.email,
+                subject: 'PDF auto generated',
+                text: 'PDF file was generated, see attachment',
+                attachments: [{
+                    filename: 'offer.pdf',
+                    path: path.join(__dirname, 'files/offer.pdf'),
+                    contentType: 'application/pdf'
+                }],
+                function(err, info) {
+                    if (err) {
+                        console.info(err)
+                        response.end(err);
+                    } else {
+                        console.info(info)
+                        response.end(info);
+                    }
+                }
+            });
+
         });
 
-        // const child = exec('wkhtmltopdf http://localhost:3000/' + path.join(__dirname, 'files/offer.pdf'),
-        //     (error, stdout, stderr) => {
-        //         console.log(`stdout: ${stdout}`);
-        //         console.log(`stderr: ${stderr}`);
-        //         if (error !== null) {
-        //             console.log(`exec error: ${error}`);
-        //         }
-        //     });
-        //
-        // console.log(child)
-
-//
-//         const nodemailer = require('nodemailer');
-//
-//         nodemailer.createTestAccount(() => {
-//             let transporter = nodemailer.createTransport({
-//                 host: 'smtp.googlemail.com', // Gmail Host
-//                 port: 465, // Port
-//                 secure: true, // this is true as port is 465
-//                 auth: {
-//                     user: process.env.MAIL,
-//                     pass: process.env.PWD
-//                 }
-//             });
-//
-//             let mailBody = `
-// <!DOCTYPE html>
-// <html><head><title>Appointment</title>
-// </head><body><div>
-//   <div>
-//     <span>Order email: ${parsed.email}</span>
-//   </div>
-//   <div>
-//     <span>Btc wallet: ${parsed.btc_wallet}</span>
-//   </div>
-//   <div>
-//     <span>PayTM wallet: ${parsed.paytm_wallet}</span>
-//   </div>
-//   <div>
-//     <span>Ecxchange BTC: ${parsed.btc} / ${parsed.inr}</span>
-//   </div>
-// </div></body></html>
-// `;
-//
-//             let mailOptions = {
-//                 from: `"Exchange order" <${process.env.MAIL}`,
-//                 to: process.env.MAIL_TO,
-//                 subject: 'Welcome Email',
-//                 html: mailBody,
-//             };
-//
-//             transporter.sendMail(mailOptions, (error, info) => {
-//                 if (error) {
-//                     return console.log(error);
-//                 }
-//                 console.log('Message sent: %s', info.messageId);
-//             });
-//         });
-//
-        response.end('post received')
     })
 
 });
 
 app.listen(port, (err) => {
     if (err) {
-        return console.log('something bad happened', err)
+        return console.error('something bad happened', err)
     }
     console.log(`server is listening on ${port}`)
 });

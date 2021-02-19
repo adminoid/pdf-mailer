@@ -1,4 +1,6 @@
-# soft
+# PDF mailer
+
+> Written on node.js, vue.js, pug, sass  
 
 ## Project setup
 ```
@@ -10,15 +12,12 @@ yarn install
 yarn serve
 ```
 
-### Compiles and minifies for production
+### Compiles and minifies sass for production
 ```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
+yarn sass
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Run application
+```
+yarn run
+```
